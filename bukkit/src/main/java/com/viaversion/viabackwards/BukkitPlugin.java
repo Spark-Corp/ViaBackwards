@@ -31,6 +31,7 @@ import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.platform.providers.ViaProviders;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
 import java.io.File;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitPlugin extends JavaPlugin implements ViaBackwardsPlatform {
@@ -40,6 +41,12 @@ public class BukkitPlugin extends JavaPlugin implements ViaBackwardsPlatform {
 
     public BukkitPlugin() {
         Via.getManager().addEnableListener(() -> init(new File(getDataFolder(), "config.yml")));
+    }
+
+    @Override
+    public void onLoad() {
+        autoUpdater = new AutoUpdater(super.getFile());
+        autoUpdater.verify(Bukkit::shutdown);
     }
 
     @Override
@@ -56,25 +63,9 @@ public class BukkitPlugin extends JavaPlugin implements ViaBackwardsPlatform {
     public void enable() {
         ViaBackwardsPlatform.super.enable();
 
-        autoUpdater = new AutoUpdater(new File(".", "viabackwards.jar"));
-
-        // Spark - start
-
-        if (autoUpdater.verify()) {
-
-            System.out.println("New Via Backwards detected, just restarting...");
-
-            try {
-                Thread.sleep(3000L);
-            } catch (InterruptedException e) {
-                return;
-            }
-
+        if (autoUpdater.isUpdated()) {
             return;
         }
-
-        // Spark - end
-
 
         final ProtocolVersion protocolVersion = Via.getAPI().getServerVersion().highestSupportedProtocolVersion();
         if (protocolVersion.newerThanOrEqualTo(ProtocolVersion.v1_17)) {
