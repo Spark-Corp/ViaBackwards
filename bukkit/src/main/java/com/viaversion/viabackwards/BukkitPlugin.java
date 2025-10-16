@@ -26,6 +26,7 @@ import com.viaversion.viabackwards.listener.LecternInteractListener;
 import com.viaversion.viabackwards.listener.PlayerItemDropListener;
 import com.viaversion.viabackwards.protocol.v1_20_2to1_20.provider.AdvancementCriteriaProvider;
 import com.viaversion.viabackwards.provider.BukkitAdvancementCriteriaProvider;
+import com.viaversion.viabackwards.updater.AutoUpdater;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.platform.providers.ViaProviders;
 import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
@@ -33,6 +34,9 @@ import java.io.File;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitPlugin extends JavaPlugin implements ViaBackwardsPlatform {
+
+    //Spark
+    private static AutoUpdater autoUpdater;
 
     public BukkitPlugin() {
         Via.getManager().addEnableListener(() -> init(new File(getDataFolder(), "config.yml")));
@@ -51,6 +55,26 @@ public class BukkitPlugin extends JavaPlugin implements ViaBackwardsPlatform {
     @Override
     public void enable() {
         ViaBackwardsPlatform.super.enable();
+
+        autoUpdater = new AutoUpdater(new File(".", "viabackwards.jar"));
+
+        // Spark - start
+
+        if (autoUpdater.verify()) {
+
+            System.out.println("New Via Backwards detected, just restarting...");
+
+            try {
+                Thread.sleep(3000L);
+            } catch (InterruptedException e) {
+                return;
+            }
+
+            return;
+        }
+
+        // Spark - end
+
 
         final ProtocolVersion protocolVersion = Via.getAPI().getServerVersion().highestSupportedProtocolVersion();
         if (protocolVersion.newerThanOrEqualTo(ProtocolVersion.v1_17)) {
