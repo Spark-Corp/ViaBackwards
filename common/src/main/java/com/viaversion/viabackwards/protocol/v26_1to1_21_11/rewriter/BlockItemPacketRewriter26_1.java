@@ -25,13 +25,13 @@ import com.viaversion.viaversion.api.minecraft.chunks.Chunk;
 import com.viaversion.viaversion.api.minecraft.data.StructuredDataContainer;
 import com.viaversion.viaversion.api.minecraft.data.StructuredDataKey;
 import com.viaversion.viaversion.api.minecraft.item.Item;
-import com.viaversion.viaversion.api.protocol.packet.PacketWrapper;
 import com.viaversion.viaversion.api.type.types.chunk.ChunkType1_21_5;
 import com.viaversion.viaversion.api.type.types.chunk.ChunkType26_1;
 import com.viaversion.viaversion.protocols.v1_21_11to26_1.packet.ClientboundPacket26_1;
 import com.viaversion.viaversion.protocols.v1_21_11to26_1.packet.ClientboundPackets26_1;
 import com.viaversion.viaversion.protocols.v1_21_4to1_21_5.rewriter.RecipeDisplayRewriter1_21_5;
 import com.viaversion.viaversion.protocols.v1_21_5to1_21_6.packet.ServerboundPackets1_21_6;
+import com.viaversion.viaversion.protocols.v1_21_7to1_21_9.packet.ClientboundConfigurationPackets1_21_9;
 import com.viaversion.viaversion.protocols.v1_21_7to1_21_9.packet.ServerboundPacket1_21_9;
 import com.viaversion.viaversion.rewriter.BlockRewriter;
 import com.viaversion.viaversion.rewriter.RecipeDisplayRewriter;
@@ -69,23 +69,10 @@ public final class BlockItemPacketRewriter26_1 extends BackwardsStructuredItemRe
         registerMerchantOffers1_20_5(ClientboundPackets26_1.MERCHANT_OFFERS);
         registerContainerClick1_21_5(ServerboundPackets1_21_6.CONTAINER_CLICK);
         registerSetCreativeModeSlot1_21_5(ServerboundPackets1_21_6.SET_CREATIVE_MODE_SLOT);
+        registerShowDialog(ClientboundPackets26_1.SHOW_DIALOG);
+        registerShowDialogDirect(ClientboundConfigurationPackets1_21_9.SHOW_DIALOG);
 
-        final RecipeDisplayRewriter<ClientboundPacket26_1> recipeRewriter = new RecipeDisplayRewriter1_21_5<>(protocol) {
-            @Override
-            protected void handleDyeSlotDisplay(final PacketWrapper wrapper) {
-                wrapper.consumeReadsOnly(() -> super.handleDyeSlotDisplay(wrapper));
-            }
-
-            @Override
-            protected void handleOnlyWithComponentSlotDisplay(final PacketWrapper wrapper) {
-                wrapper.consumeReadsOnly(() -> super.handleOnlyWithComponentSlotDisplay(wrapper));
-            }
-
-            @Override
-            protected void handleWithRemainderSlotDisplay(final PacketWrapper wrapper) {
-                wrapper.consumeReadsOnly(() -> super.handleWithRemainderSlotDisplay(wrapper));
-            }
-        };
+        final RecipeDisplayRewriter<ClientboundPacket26_1> recipeRewriter = new RecipeDisplayRewriter1_21_5<>(protocol);
         recipeRewriter.registerUpdateRecipes(ClientboundPackets26_1.UPDATE_RECIPES);
         recipeRewriter.registerRecipeBookAdd(ClientboundPackets26_1.RECIPE_BOOK_ADD);
         recipeRewriter.registerPlaceGhostRecipe(ClientboundPackets26_1.PLACE_GHOST_RECIPE);
