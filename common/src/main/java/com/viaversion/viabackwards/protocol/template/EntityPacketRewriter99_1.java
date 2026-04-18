@@ -20,16 +20,15 @@ package com.viaversion.viabackwards.protocol.template;
 import com.viaversion.viabackwards.api.rewriters.EntityRewriter;
 import com.viaversion.viaversion.api.minecraft.entities.EntityType;
 import com.viaversion.viaversion.api.minecraft.entities.EntityTypes1_21_11;
-import com.viaversion.viaversion.api.minecraft.entitydata.types.EntityDataTypes1_21_11;
+import com.viaversion.viaversion.api.minecraft.entitydata.types.EntityDataTypes26_1;
 import com.viaversion.viaversion.api.type.types.version.VersionedTypes;
 import com.viaversion.viaversion.protocols.v1_21_11to26_1.packet.ClientboundPacket26_1;
-import com.viaversion.viaversion.protocols.v1_21_11to26_1.packet.ClientboundPackets26_1;
 
 // Replace if needed
 //  VersionedTypes
 final class EntityPacketRewriter99_1 extends EntityRewriter<ClientboundPacket26_1, Protocol99_1To98_1> {
 
-    private static final EntityDataTypes1_21_11 MAPPED_DATA_TYPES = VersionedTypes.V1_21_11.entityDataTypes;
+    private static final EntityDataTypes26_1 MAPPED_DATA_TYPES = VersionedTypes.V26_1.entityDataTypes;
 
     public EntityPacketRewriter99_1(final Protocol99_1To98_1 protocol) {
         super(protocol, MAPPED_DATA_TYPES.optionalComponentType, MAPPED_DATA_TYPES.booleanType);
@@ -37,27 +36,17 @@ final class EntityPacketRewriter99_1 extends EntityRewriter<ClientboundPacket26_
 
     @Override
     public void registerPackets() {
-        registerTrackerWithData1_21_9(ClientboundPackets26_1.ADD_ENTITY, EntityTypes1_21_11.FALLING_BLOCK);
-        registerSetEntityData(ClientboundPackets26_1.SET_ENTITY_DATA);
-        registerRemoveEntities(ClientboundPackets26_1.REMOVE_ENTITIES);
-        registerPlayerAbilities(ClientboundPackets26_1.PLAYER_ABILITIES);
-        registerGameEvent(ClientboundPackets26_1.GAME_EVENT);
-        registerLogin1_20_5(ClientboundPackets26_1.LOGIN);
-        registerRespawn1_20_5(ClientboundPackets26_1.RESPAWN);
     }
 
     @Override
     protected void registerRewrites() {
-        /*filter().handler((event, data) -> {
-            int id = data.dataType().typeId();
-            if (id >= ac) {
-                return;
-            } else if (id >= ab) {
-                id--;
-            }
-
-            data.setDataType(MAPPED_DATA_TYPES.byId(id));
-        });*/
+        dataTypeMapper().register();
+        /* ... or like this for additions and removals that are not at the very end
+        dataTypeMapper()
+            .added(MAPPED_DATA_TYPES.catSoundVariant)
+            .removed(MAPPED_DATA_TYPES.cowSoundVariant)
+            .skip(MAPPED_DATA_TYPES.pigSoundVariant) // if neither removed nor added, but the value type has to be changed separately
+            .register();*/
 
         registerEntityDataTypeHandler1_20_3(
             MAPPED_DATA_TYPES.itemType,
@@ -75,9 +64,7 @@ final class EntityPacketRewriter99_1 extends EntityRewriter<ClientboundPacket26_
 
     @Override
     public void onMappingDataLoaded() {
-        // If types changed, uncomment to map them
-        // mapTypes();
-
+        super.onMappingDataLoaded();
         // mapEntityTypeWithData(EntityTypes1_21_11.SNIFFER, EntityTypes1_21_11.RAVAGER).tagName();
     }
 

@@ -15,15 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.viaversion.viabackwards.protocol.v1_15_2to1_15_1;
+package com.viaversion.viabackwards.protocol.v26_1to1_21_11.storage;
 
-import com.viaversion.viabackwards.api.BackwardsProtocol;
-import com.viaversion.viaversion.protocols.v1_13_2to1_14.packet.ServerboundPackets1_14;
-import com.viaversion.viaversion.protocols.v1_14_4to1_15.packet.ClientboundPackets1_15;
+import com.viaversion.viaversion.api.connection.StorableObject;
 
-public class Protocol1_15_2To1_15_1 extends BackwardsProtocol<ClientboundPackets1_15, ClientboundPackets1_15, ServerboundPackets1_14, ServerboundPackets1_14> {
+public final class GameModeStorage implements StorableObject {
 
-    public Protocol1_15_2To1_15_1() {
-        super(ClientboundPackets1_15.class, ClientboundPackets1_15.class, ServerboundPackets1_14.class, ServerboundPackets1_14.class);
+    private int gameMode = -1;
+
+    public int gameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(final int gameMode) {
+        this.gameMode = gameMode;
     }
 }
